@@ -31,7 +31,7 @@ time $GHIDRA_HEADLESS "$PROJ_DIR" "$PROJ_NAME" \
     -scriptPath "$SCRIPT_DIR" \
     -postScript "$SCRIPT_DIR/HighPCodeLifter.java"
     # -deleteProject \
-mv $FILE_NAME.json $PROJ_DIR
+mv ${FILE_NAME}.json $(dirname $TARGET_BIN)/$FILE_NAME.json
 
 # ディレクトリ削除
 # rm -rf "$PROJ_DIR"

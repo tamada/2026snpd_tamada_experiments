@@ -1,6 +1,6 @@
 #! /bin/bash
 
-echo "compile go-bzip2 with Go"
+echo "compile bzip2go with Go"
 docker run -it --rm -v $PWD:/opt -w /opt golang:bookworm      bash shells/compile_go.sh
 
 echo "compile go-bzip2 with TinyGo"

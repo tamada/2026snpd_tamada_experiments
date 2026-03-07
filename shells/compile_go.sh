@@ -1,14 +1,18 @@
 #! /bin/sh
 
 function compile_go() {
-    echo "compile bzip2go with Go on platform $GOOS/$GOARCH"
     GOARCH=$1
     GOOS=$2
+    echo "compile bzip2go with Go on platform $GOOS/$GOARCH"
     PLATFORM=$GOARCH-$GOOS
-    mkdir -p build/$PLATFORM/go_{default,sw}
+    mkdir -p ../build/$PLATFORM/go_{default,sw}
+    ext=""
+    if [[ "$GOOS" == "windows" ]]; then
+        ext=".exe"
+    fi
 
-    GOOS=$GOOS GOARCH=$GOARCH go build -o ../build/$PLATFORM/go_default/bzip2go ./...
-    GOOS=$GOOS GOARCH=$GOARCH go build -o ../build/$PLATFORM/go_sw/bzip2go -ldflags="-s -w" ./...
+    GOOS=$GOOS GOARCH=$GOARCH go build -o ../build/$PLATFORM/go_default/bzip2go${ext} ./...
+    GOOS=$GOOS GOARCH=$GOARCH go build -o ../build/$PLATFORM/go_sw/bzip2go${ext} -ldflags="-s -w" ./...
 }
 
 cd bzip2go
