@@ -7,3 +7,12 @@
 [submodule "bzip2go"]
 	path = bzip2go
 	url = https://github.com/pedroalbanese/bzip2.git
+[submodule "bzip2/bzip2"]
+	path = bzip2/bzip2
+	url = git://sourceware.org/git/bzip2.git
+[submodule "bzip2/bzip2rs"]
+	path = bzip2/bzip2rs
+	url = https://github.com/tamada/bzip2rs.git
+[submodule "bzip2/bzip2go"]
+	path = bzip2/bzip2go
+	url = https://github.com/pedroalbanese/bzip2.git

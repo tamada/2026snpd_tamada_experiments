@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class HighPCodeLifter extends GhidraScript {
@@ -29,12 +30,13 @@ public class HighPCodeLifter extends GhidraScript {
 
         List<String> functionBlocks = new ArrayList<>();
         Function func = getFirstFunction();
+        HashMap<String, String> symbols = new HashMap<>();
 
         while (func != null && !monitor.isCancelled()) {
             if (!func.isThunk() && !func.isExternal()) {
                 DecompileResults results = decompInterface.decompileFunction(func, 30, monitor);
                 if (results != null && results.decompileCompleted()) {
-                    functionBlocks.add(getFunctionJson(func, results.getHighFunction()));
+                    functionBlocks.add(getFunctionJson(func, results.getHighFunction(), symbols));
                 }
             }
             func = getFunctionAfter(func);
@@ -60,13 +62,14 @@ public class HighPCodeLifter extends GhidraScript {
         }
     }
 
-    private String getFunctionJson(Function func, HighFunction highFunc) {
+    private String getFunctionJson(Function func, HighFunction highFunc, HashMap<String, String> symbols) {
         List<String> opsJson = new ArrayList<>();
         Iterator<PcodeOpAST> opIter = highFunc.getPcodeOps();
 
         while (opIter.hasNext()) {
             PcodeOpAST op = opIter.next();
             opsJson.add(getOpJson(op));
+            pushSymbolsIfNeeded(op, symbols);
         }
 
         return String.format(
@@ -74,6 +77,21 @@ public class HighPCodeLifter extends GhidraScript {
             func.getName(),
             opsJson.stream().map(s -> "        " + s).collect(Collectors.joining(",\n"))
         );
+    }
+
+    private void putSymbolsIfNeeded(PcodeOpAST op, HashMap<String, String> symbols) {
+        if (op.getOpcode() == PcodeOp.CALL) {
+            Varnode target = op.getInput(0);
+            if (target != null && target.isAddress()) {
+                Address addr = target.getAddress();
+                // GhidraのAPIでその場所にある関数を取得
+                Function targetFunc = getFunctionAt(addr);
+                if (targetFunc != null) {
+                    // symbolsマップに "0x401234": "func_name" の形式で保存
+                    symbols.put(addr.toString(), targetFunc.getName());
+                }
+            }
+        }        
     }
 
     private String getOpJson(PcodeOp op) {

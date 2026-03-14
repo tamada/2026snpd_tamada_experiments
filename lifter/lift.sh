@@ -11,8 +11,8 @@ GHIDRA_HEADLESS="${GHIDRA_HOME}/support/analyzeHeadless"
 SCRIPT_DIR="$(pwd)/lifter"
 TARGET_BIN="$1" # The target binary for binary lifting, passed as an argument to the script
 PROJ_NAME="$(basename $TARGET_BIN)"
-PROJ_DIR="$(echo "$TARGET_BIN" | sed 's|build|ghidra|g')/"
-FILE_NAME="$(basename $TARGET_BIN)"
+PROJ_DIR="$(echo "$TARGET_BIN" | sed 's|executables|ghidra|g')/"
+DEST_DIR="$(echo "$TARGET_BIN" | sed 's|executables|pcodes|g')/"
 
 if [ -z "$TARGET_BIN" ]; then
     echo "Usage: $0 <target_binary>"
@@ -31,7 +31,9 @@ time $GHIDRA_HEADLESS "$PROJ_DIR" "$PROJ_NAME" \
     -scriptPath "$SCRIPT_DIR" \
     -postScript "$SCRIPT_DIR/HighPCodeLifter.java"
     # -deleteProject \
-mv ${FILE_NAME}.json $(dirname $TARGET_BIN)/$FILE_NAME.json
+
+mkdir -p $(dirname $DEST_DIR)
+mv ${PROJ_NAME}.json $(dirname $DEST_DIR)/${PROJ_NAME}.json
 
 # ディレクトリ削除
 # rm -rf "$PROJ_DIR"
