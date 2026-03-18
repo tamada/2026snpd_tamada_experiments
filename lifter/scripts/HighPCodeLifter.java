@@ -1,5 +1,7 @@
+package scripts;
 import ghidra.app.script.GhidraScript;
 import ghidra.app.decompiler.*;
+import ghidra.program.model.address.Address;
 import ghidra.program.model.pcode.PcodeOp;
 import ghidra.program.model.pcode.PcodeOpAST;
 import ghidra.program.model.pcode.Varnode;
@@ -8,9 +10,11 @@ import ghidra.program.model.listing.Function;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -26,7 +30,6 @@ public class HighPCodeLifter extends GhidraScript {
         jsonOutput.add("{");
         jsonOutput.add(String.format("  \"program\": \"%s\",", currentProgram.getName()));
         jsonOutput.add(String.format("  \"path\": \"%s\",", path));
-        jsonOutput.add("  \"functions\": [");
 
         List<String> functionBlocks = new ArrayList<>();
         Function func = getFirstFunction();
@@ -42,7 +45,14 @@ public class HighPCodeLifter extends GhidraScript {
             func = getFunctionAfter(func);
         }
 
+        jsonOutput.add("  \"symbols\": {");
+        String items = symbols.entrySet().stream()
+            .map(e -> String.format("    \"0x%s\": \"%s\"", e.getKey(), e.getValue()))
+            .collect(Collectors.joining(",\n"));
+        jsonOutput.add(items);
+        jsonOutput.add("  },");
         // 関数ブロックをカンマで結合して追加
+        jsonOutput.add("  \"functions\": [");
         jsonOutput.add(String.join(",\n", functionBlocks));
         jsonOutput.add("  ]");
         jsonOutput.add("}");
@@ -53,7 +63,8 @@ public class HighPCodeLifter extends GhidraScript {
     }
 
     private void outputToFile(String fileName, List<String> outputs) {
-        try (var out = Files.newBufferedWriter(java.nio.file.Path.of(fileName + ".json"))) {
+        Path cwd = Path.of(".");
+        try (var out = Files.newBufferedWriter(cwd.resolve(fileName + ".json"))) {
             var w = new java.io.PrintWriter(out);
             outputs.stream()
                 .forEach(line -> w.println(line));
@@ -79,7 +90,7 @@ public class HighPCodeLifter extends GhidraScript {
         );
     }
 
-    private void putSymbolsIfNeeded(PcodeOpAST op, HashMap<String, String> symbols) {
+    private void pushSymbolsIfNeeded(PcodeOpAST op, HashMap<String, String> symbols) {
         if (op.getOpcode() == PcodeOp.CALL) {
             Varnode target = op.getInput(0);
             if (target != null && target.isAddress()) {

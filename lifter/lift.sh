@@ -8,7 +8,7 @@ else
 fi
 
 GHIDRA_HEADLESS="${GHIDRA_HOME}/support/analyzeHeadless"
-SCRIPT_DIR="$(pwd)/lifter"
+SCRIPT_DIR="$(pwd)/lifter/scripts"
 TARGET_BIN="$1" # The target binary for binary lifting, passed as an argument to the script
 PROJ_NAME="$(basename $TARGET_BIN)"
 PROJ_DIR="$(echo "$TARGET_BIN" | sed 's|executables|ghidra|g')/"
@@ -32,6 +32,7 @@ time $GHIDRA_HEADLESS "$PROJ_DIR" "$PROJ_NAME" \
     -postScript "$SCRIPT_DIR/HighPCodeLifter.java"
     # -deleteProject \
 
+echo "Generated PCode for ${PROJ_NAME}.json"
 mkdir -p $(dirname $DEST_DIR)
 mv ${PROJ_NAME}.json $(dirname $DEST_DIR)/${PROJ_NAME}.json
 
