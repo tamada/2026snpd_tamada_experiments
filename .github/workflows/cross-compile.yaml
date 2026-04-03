@@ -51,7 +51,8 @@ jobs:
       - name: Setup Rust
         run: |
           rustup update stable
-          # rustup target add ${{ matrix.target }}
+          rustup target add ${{ matrix.target }}
+          cargo install cargo-zigbuild
 
       - name: Setup Go
         uses: actions/setup-go@v4
@@ -62,18 +63,6 @@ jobs:
         uses: acifani/setup-tinygo@v2
         with:
           tinygo-version: '0.40.0'
-
-      - name: Build Rust
-        shell: bash
-        run: |
-          mkdir -p dist
-          cd bzip2/bzip2rs
-          # cargo build --release --features sys --target ${{ matrix.target }} --target-dir target/sys
-          # cargo build --release --target ${{ matrix.target }}                --target-dir target/pure
-          cargo build --release --features sys --target-dir target/sys
-          cargo build --release                --target-dir target/pure
-          cp target/sys/${{ matrix.target }}/release/bzip2rs  ../../dist/bzip2rs-sys-${{ matrix.target }}
-          cp target/pure/${{ matrix.target }}/release/bzip2rs ../../dist/bzip2rs-pure-${{ matrix.target }}
 
       - name: Build C
         shell: bash
@@ -97,6 +86,18 @@ jobs:
         run: |
           cd bzip2/bzip2go
           tinygo build -o ../../dist/bzip2-tinygo-${{ matrix.target }}${{ matrix.extension }} cmd/bzip2/main.go
+
+      - name: Build Rust
+        shell: bash
+        run: |
+          mkdir -p dist
+          cd bzip2/bzip2rs
+          cargo zigbuild --release --features sys --target ${{ matrix.target }} --target-dir target/sys
+          cargo zigbuild --release --target ${{ matrix.target }}                --target-dir target/pure
+          # cargo build --release --features sys --target-dir target/sys
+          # cargo build --release                --target-dir target/pure
+          cp target/sys/${{ matrix.target }}/release/bzip2rs  ../../dist/bzip2rs-sys-${{ matrix.target }}
+          cp target/pure/${{ matrix.target }}/release/bzip2rs ../../dist/bzip2rs-pure-${{ matrix.target }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
