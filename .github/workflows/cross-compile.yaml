@@ -89,7 +89,7 @@ jobs:
           tinygo build -o ../../dist/bzip2-tinygo-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.extension }} cmd/bzip2/main.go
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: executables-${{ matrix.os }}-${{ matrix.arch }}
           path: dist
