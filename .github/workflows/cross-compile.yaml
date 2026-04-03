@@ -98,7 +98,7 @@ jobs:
           cargo zigbuild --release --target ${{ matrix.target }}                --target-dir target/pure
           # cargo build --release --features sys --target-dir target/sys
           # cargo build --release                --target-dir target/pure
-          tree target
+          ls -R target
           cp target/sys/${{ matrix.target }}/release/bzip2rs  ../../dist/bzip2rs-sys-${{ matrix.target }}
           cp target/pure/${{ matrix.target }}/release/bzip2rs ../../dist/bzip2rs-pure-${{ matrix.target }}
 
