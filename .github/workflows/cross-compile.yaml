@@ -1,0 +1,95 @@
+name: corss-compile
+on:
+  push:
+    branches:
+      - "**"
+jobs:
+  build:
+    name: Build for ${{ matrix.os }}-${{ matrix.arch }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            extension: ''
+            arch: arm64
+            target: aarch64-unknown-linux-gnu
+          - os: ubuntu-latest
+            extension: ''
+            arch: amd64
+            target: x86_64-unknown-linux-gnu
+          - os: macos-latest
+            extension: ''
+            arch: arm64
+            target: aarch64-apple-darwin
+          - os: macos-latest
+            extension: ''
+            arch: amd64
+            target: x86_64-apple-darwin
+          - os: windows-latest
+            extension: '.exe'
+            arch: arm64
+            target: aarch64-pc-windows-gnu
+          - os: windows-latest
+            extension: '.exe'
+            arch: arm64
+            target: aarch64-pc-windows-gnu
+            
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup Rust
+        run: |
+          rustup update stable
+          rustup target add 
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+      - name: Setup TinyGo
+        uses: acifani/setup-tinygo@v2
+        with:
+          tinygo-version: '0.40.0'
+
+      - name: Build Rust
+        shell: bash
+        run: |
+          mkdir -p dist
+          cd bzip2/bzip2rs
+          cargo build --release --features sys --target ${{ matrix.arch }}-${{ matrix.os }} --target-dir target/sys
+          cargo build --release --target ${{ matrix.arch }}-${{ matrix.os }}                --target-dir target/pure
+          cp target/sys/${{ matrix.arch }}-${{ matrix.os }}/release/bzip2rs  ../../dist/bzip2rs-sys-${{ matrix.os }}-${{ matrix.arch }}
+          cp target/pure/${{ matrix.arch }}-${{ matrix.os }}/release/bzip2rs ../../dist/bzip2rs-pure-${{ matrix.os }}-${{ matrix.arch }}
+
+      - name: Build C
+        shell: bash
+        run: |
+          cd bzip2/bzip2
+          make
+          cp bzip2${{ matrix.extension }} ../../dist/bzip2-gcc-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.extension }}
+
+          make clean
+          make CC=clang
+          cp bzip2${{ matrix.extension }} ../../dist/bzip2-clang-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.extension }}
+
+      - name: Build Go
+        shell: bash
+        run: |
+          cd bzip2/bzip2go
+          go build -o ../../dist/bzip2-go-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.extension }} cmd/bzip2/main.go
+
+      - name: Build with TinyGo
+        shell: bash
+        run: |
+          cd bzip2/bzip2go
+          tinygo build -o ../../dist/bzip2-tinygo-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.extension }} cmd/bzip2/main.go
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: executables-${{ matrix.os }}-${{ matrix.arch }}
+          path: dist
