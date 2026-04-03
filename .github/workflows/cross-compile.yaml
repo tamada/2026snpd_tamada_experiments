@@ -68,36 +68,36 @@ jobs:
         run: |
           mkdir -p dist
           cd bzip2/bzip2rs
-          cargo build --release --features sys --target ${{ matrix.arch }}-${{ matrix.os }} --target-dir target/sys
-          cargo build --release --target ${{ matrix.arch }}-${{ matrix.os }}                --target-dir target/pure
-          cp target/sys/${{ matrix.arch }}-${{ matrix.os }}/release/bzip2rs  ../../dist/bzip2rs-sys-${{ matrix.os }}-${{ matrix.arch }}
-          cp target/pure/${{ matrix.arch }}-${{ matrix.os }}/release/bzip2rs ../../dist/bzip2rs-pure-${{ matrix.os }}-${{ matrix.arch }}
+          cargo build --release --features sys --target ${{ matrix.target }} --target-dir target/sys
+          cargo build --release --target ${{ matrix.target }}                --target-dir target/pure
+          cp target/sys/${{ matrix.target }}/release/bzip2rs  ../../dist/bzip2rs-sys-${{ matrix.target }}
+          cp target/pure/${{ matrix.target }}/release/bzip2rs ../../dist/bzip2rs-pure-${{ matrix.target }}
 
       - name: Build C
         shell: bash
         run: |
           cd bzip2/bzip2
           make
-          cp bzip2${{ matrix.extension }} ../../dist/bzip2-gcc-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.extension }}
+          cp bzip2${{ matrix.extension }} ../../dist/bzip2-gcc-${{ matrix.target }}${{ matrix.extension }}
 
           make clean
           make CC=clang
-          cp bzip2${{ matrix.extension }} ../../dist/bzip2-clang-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.extension }}
+          cp bzip2${{ matrix.extension }} ../../dist/bzip2-clang-${{ matrix.target }}${{ matrix.extension }}
 
       - name: Build Go
         shell: bash
         run: |
           cd bzip2/bzip2go
-          go build -o ../../dist/bzip2-go-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.extension }} cmd/bzip2/main.go
+          go build -o ../../dist/bzip2-go-${{ matrix.target }}${{ matrix.extension }} cmd/bzip2/main.go
 
       - name: Build with TinyGo
         shell: bash
         run: |
           cd bzip2/bzip2go
-          tinygo build -o ../../dist/bzip2-tinygo-${{ matrix.os }}-${{ matrix.arch }}${{ matrix.extension }} cmd/bzip2/main.go
+          tinygo build -o ../../dist/bzip2-tinygo-${{ matrix.target }}${{ matrix.extension }} cmd/bzip2/main.go
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: executables-${{ matrix.os }}-${{ matrix.arch }}
+          name: executables-${{ matrix.target }}
           path: dist
