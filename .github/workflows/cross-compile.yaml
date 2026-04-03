@@ -67,7 +67,8 @@ jobs:
         with:
           tinygo-version: '0.40.0'
 
-      - name: Build C
+      - name: Build C for not Windows
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           cd bzip2/bzip2
@@ -77,6 +78,13 @@ jobs:
           make clean
           make CC=clang
           cp bzip2${{ matrix.extension }} ../../dist/bzip2-clang-${{ matrix.target }}${{ matrix.extension }}
+
+      - name: Build C for Windows
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          cd bzip2/bzip2
+          nmake -f makefile.msc
 
       - name: Build Go
         shell: bash
