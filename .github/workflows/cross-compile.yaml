@@ -50,6 +50,7 @@ jobs:
 
       - name: Setup Rust
         run: |
+          mkdir -p dist
           rustup update stable
           rustup target add ${{ matrix.target }}
           cargo install cargo-zigbuild
@@ -90,7 +91,6 @@ jobs:
       - name: Build Rust
         shell: bash
         run: |
-          mkdir -p dist
           cd bzip2/bzip2rs
           cargo zigbuild --release --features sys --target ${{ matrix.target }} --target-dir target/sys
           cargo zigbuild --release --target ${{ matrix.target }}                --target-dir target/pure
