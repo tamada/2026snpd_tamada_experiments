@@ -60,12 +60,12 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.23'
+          go-version: '1.24'
 
       - name: Setup TinyGo
         uses: acifani/setup-tinygo@v2
         with:
-          tinygo-version: '0.40.0'
+          tinygo-version: '0.30.0'
 
       - name: Build C for not Windows
         if: runner.os != 'Windows'
@@ -99,11 +99,20 @@ jobs:
           cd bzip2/bzip2go
           go build -o ../../dist/bzip2-go-${{ matrix.target }}${{ matrix.extension }} cmd/bzip2/main.go
 
-      - name: Build with TinyGo
+      - name: Build with TinyGo for not Windows
+        # if: runner.os != 'Windows'
         shell: bash
         run: |
           cd bzip2/bzip2go
           tinygo build -o ../../dist/bzip2-tinygo-${{ matrix.target }}${{ matrix.extension }} cmd/bzip2/main.go
+
+      # - name: Build with TinyGo for Windows
+      #   if: runner.os == 'Windows'
+      #   shell: bash
+      #   run: |
+      #     cd bzip2/bzip2go
+      #     export CGO_ENABLED=1
+      #     tinygo build -target=windows -o ../../dist/bzip2-tinygo-${{ matrix.target }}${{ matrix.extension }} cmd/bzip2/main.go
 
       - name: Build Rust
         shell: bash
