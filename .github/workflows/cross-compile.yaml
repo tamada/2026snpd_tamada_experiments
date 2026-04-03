@@ -79,12 +79,19 @@ jobs:
           make CC=clang
           cp bzip2${{ matrix.extension }} ../../dist/bzip2-clang-${{ matrix.target }}${{ matrix.extension }}
 
+      - name: Set up MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
+
       - name: Build C for Windows
         if: runner.os == 'Windows'
         shell: bash
         run: |
           cd bzip2/bzip2
           nmake -f makefile.msc
+          cp bzip2${{ matrix.extension }} ../../dist/bzip2-msvc-${{ matrix.target }}${{ matrix.extension }}
 
       - name: Build Go
         shell: bash
