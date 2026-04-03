@@ -34,11 +34,11 @@ jobs:
           - os: windows-latest
             extension: '.exe'
             arch: arm64
-            target: aarch64-pc-windows-gnu
+            target: aarch64-pc-windows-msvc
           - os: windows-latest
             extension: '.exe'
-            arch: arm64
-            target: aarch64-pc-windows-gnu
+            arch: amd64
+            target: x86_64-pc-windows-msvc
             
     steps:
       - name: Checkout code
@@ -51,7 +51,7 @@ jobs:
       - name: Setup Rust
         run: |
           rustup update stable
-          rustup target add ${{ matrix.target }}
+          # rustup target add ${{ matrix.target }}
 
       - name: Setup Go
         uses: actions/setup-go@v4
@@ -68,8 +68,10 @@ jobs:
         run: |
           mkdir -p dist
           cd bzip2/bzip2rs
-          cargo build --release --features sys --target ${{ matrix.target }} --target-dir target/sys
-          cargo build --release --target ${{ matrix.target }}                --target-dir target/pure
+          # cargo build --release --features sys --target ${{ matrix.target }} --target-dir target/sys
+          # cargo build --release --target ${{ matrix.target }}                --target-dir target/pure
+          cargo build --release --features sys --target-dir target/sys
+          cargo build --release                --target-dir target/pure
           cp target/sys/${{ matrix.target }}/release/bzip2rs  ../../dist/bzip2rs-sys-${{ matrix.target }}
           cp target/pure/${{ matrix.target }}/release/bzip2rs ../../dist/bzip2rs-pure-${{ matrix.target }}
 
