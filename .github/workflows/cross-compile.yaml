@@ -46,7 +46,7 @@ jobs:
       - name: Setup Rust
         run: |
           rustup update stable
-          rustup target add 
+          rustup target add ${{ matrix.target }}
 
       - name: Setup Go
         uses: actions/setup-go@v4
