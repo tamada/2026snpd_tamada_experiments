@@ -65,7 +65,7 @@ jobs:
       - name: Setup TinyGo
         uses: acifani/setup-tinygo@v2
         with:
-          tinygo-version: '0.33.0'
+          tinygo-version: '0.40.0'
 
       - name: Build C for not Windows
         if: runner.os != 'Windows'
