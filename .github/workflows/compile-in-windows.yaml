@@ -9,20 +9,8 @@ permissions:
 
 jobs:
   build:
-    name: Build for ${{ matrix.os }}-${{ matrix.arch }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: windows-latest
-            extension: '.exe'
-            arch: arm64
-            target: aarch64-pc-windows-msvc
-          - os: windows-latest
-            extension: '.exe'
-            arch: amd64
-            target: x86_64-pc-windows-msvc
+    name: Build for Windows
+    runs-on: windows-latest
             
     steps:
       - name: Checkout code
@@ -31,6 +19,7 @@ jobs:
           ref: main
           fetch-depth: 0
           submodules: recursive
+
       - name: Setup Zig
         uses: mlugg/setup-zig@v2
 
@@ -66,7 +55,7 @@ jobs:
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: ${{ matrix.arch }}
+          arch: amd64
 
       - name: Build bzip2c for Windows
         shell: bash
@@ -81,24 +70,24 @@ jobs:
           cd bzip2/bzip2go
           go build -o ../../dist/bzip2_${{ matrix.arch }}_windows_go${{ matrix.extension }} cmd/bzip2/main.go
 
-      - name: Build with TinyGo for not Windows
-        shell: bash
-        run: |
-          cd bzip2/bzip2go
-          export CGO_ENABLED=1
-          # tinygo build -o ../../dist/bzip2_${{ matrix.arch }}_windows_tgo${{ matrix.extension }} cmd/bzip2/main.go
+      # - name: Build with TinyGo for not Windows
+      #   shell: bash
+      #   run: |
+      #     cd bzip2/bzip2go
+      #     export CGO_ENABLED=1
+      #     # tinygo build -o ../../dist/bzip2_${{ matrix.arch }}_windows_tgo${{ matrix.extension }} cmd/bzip2/main.go
 
-      - name: Build Rust
-        shell: bash
-        run: |
-          cd bzip2/bzip2rs
-          cargo zigbuild --release --features sys --target ${{ matrix.target }} --target-dir target/sys
-          cargo zigbuild --release --target ${{ matrix.target }}                --target-dir target/pure
-          # cargo build --release --features sys --target-dir target/sys
-          # cargo build --release                --target-dir target/pure
-          ls -R target
-          cp target/sys/${{ matrix.target }}/release/bzip2rs  ../../dist/bzip2rs-sys-${{ matrix.target }}
-          cp target/pure/${{ matrix.target }}/release/bzip2rs ../../dist/bzip2rs-pure-${{ matrix.target }}
+      # - name: Build Rust
+      #   shell: bash
+      #   run: |
+      #     cd bzip2/bzip2rs
+      #     cargo zigbuild --release --features sys --target ${{ matrix.target }} --target-dir target/sys
+      #     cargo zigbuild --release --target ${{ matrix.target }}                --target-dir target/pure
+      #     # cargo build --release --features sys --target-dir target/sys
+      #     # cargo build --release                --target-dir target/pure
+      #     ls -R target
+      #     cp target/sys/${{ matrix.target }}/release/bzip2rs  ../../dist/bzip2rs-sys-${{ matrix.target }}
+      #     cp target/pure/${{ matrix.target }}/release/bzip2rs ../../dist/bzip2rs-pure-${{ matrix.target }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
