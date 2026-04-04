@@ -43,8 +43,8 @@ jobs:
         with:
           arch: amd64
 
-    #   - name: Setup tmate session
-    #     uses: mxschmitt/action-tmate@v3
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

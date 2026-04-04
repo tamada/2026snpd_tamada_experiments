@@ -1,4 +1,4 @@
-name: corss-compile
+name: compile in windows
 on:
   push:
     branches:
@@ -58,9 +58,9 @@ jobs:
           make
           cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_gcc${{ matrix.extension }}
 
-          make clean
-          make CC=clang
-          cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_clang${{ matrix.extension }}
+          # make clean
+          # make CC=clang
+          # cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_clang${{ matrix.extension }}
 
       - name: Setup MSVC
         if: runner.os == 'Windows'
@@ -86,7 +86,7 @@ jobs:
         run: |
           cd bzip2/bzip2go
           export CGO_ENABLED=1
-          tinygo build -o ../../dist/bzip2_${{ matrix.arch }}_windows_tgo${{ matrix.extension }} cmd/bzip2/main.go
+          # tinygo build -o ../../dist/bzip2_${{ matrix.arch }}_windows_tgo${{ matrix.extension }} cmd/bzip2/main.go
 
       - name: Build Rust
         shell: bash
