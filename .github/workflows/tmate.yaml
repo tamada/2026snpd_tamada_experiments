@@ -24,7 +24,8 @@ jobs:
         run: |
           mkdir -p dist
           rustup update stable
-          rustup target add ${{ matrix.target }}
+          rustup target add aarch64-pc-windows-msvc
+          rustup target add x86_64-pc-windows-msvc
           cargo install cargo-zigbuild
 
       - name: Setup Go
@@ -38,17 +39,16 @@ jobs:
           tinygo-version: '0.40.0'
 
       - name: Set up MSVC
-        if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: ${{ matrix.arch }}
+          arch: amd64
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+    #   - name: Setup tmate session
+    #     uses: mxschmitt/action-tmate@v3
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: executables-${{ matrix.target }}
+          name: executables-amd64-windows
           path: dist
 

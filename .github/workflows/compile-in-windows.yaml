@@ -15,22 +15,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
-            extension: ''
+          - os: windows-latest
+            extension: '.exe'
             arch: arm64
-            target: aarch64-unknown-linux-gnu
-          - os: ubuntu-latest
-            extension: ''
+            target: aarch64-pc-windows-msvc
+          - os: windows-latest
+            extension: '.exe'
             arch: amd64
-            target: x86_64-unknown-linux-gnu
-          - os: macos-latest
-            extension: ''
-            arch: arm64
-            target: aarch64-apple-darwin
-          - os: macos-latest
-            extension: ''
-            arch: amd64
-            target: x86_64-apple-darwin
+            target: x86_64-pc-windows-msvc
             
     steps:
       - name: Checkout code
@@ -64,23 +56,37 @@ jobs:
         run: |
           cd bzip2/bzip2
           make
-          cp bzip2${{ matrix.extension }} ../../dist/bzip2-gcc-${{ matrix.target }}${{ matrix.extension }}
+          cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_gcc${{ matrix.extension }}
 
           make clean
           make CC=clang
-          cp bzip2${{ matrix.extension }} ../../dist/bzip2-clang-${{ matrix.target }}${{ matrix.extension }}
+          cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_clang${{ matrix.extension }}
+
+      - name: Setup MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.arch }}
+
+      - name: Build bzip2c for Windows
+        shell: bash
+        run: |
+          cd bzip2/bzip2
+          nmake -f makefile.msc
+          cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_msvc${{ matrix.extension }}
 
       - name: Build Go
         shell: bash
         run: |
           cd bzip2/bzip2go
-          go build -o ../../dist/bzip2-go-${{ matrix.target }}${{ matrix.extension }} cmd/bzip2/main.go
+          go build -o ../../dist/bzip2_${{ matrix.arch }}_windows_go${{ matrix.extension }} cmd/bzip2/main.go
 
-      - name: Build with TinyGo
+      - name: Build with TinyGo for not Windows
         shell: bash
         run: |
           cd bzip2/bzip2go
-          tinygo build -o ../../dist/bzip2-tinygo-${{ matrix.target }}${{ matrix.extension }} cmd/bzip2/main.go
+          export CGO_ENABLED=1
+          tinygo build -o ../../dist/bzip2_${{ matrix.arch }}_windows_tgo${{ matrix.extension }} cmd/bzip2/main.go
 
       - name: Build Rust
         shell: bash
@@ -97,5 +103,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: executables_${{ matrix.arch }}_${{ runner.os }}
+          name: executables-${{ matrix.target }}
           path: dist
