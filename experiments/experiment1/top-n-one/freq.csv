@@ -1,0 +1,9 @@
+,"[0.00, 0.10)","[0.10, 0.20)","[0.20, 0.30)","[0.30, 0.40)","[0.40, 0.50)","[0.50, 0.60)","[0.60, 0.70)","[0.70, 0.80)","[0.80, 0.90)","[0.90, 1.00)","[1.00, 1.00]"
+experiments/experiment1/top-n-one/tables/cosine.csv,0,0,0,0,0,0,2,0,8,20,36
+experiments/experiment1/top-n-one/tables/dice.csv,0,0,0,0,0,0,0,3,8,18,37
+experiments/experiment1/top-n-one/tables/euclidean.csv,0,0,0,0,0,2,1,12,15,0,36
+experiments/experiment1/top-n-one/tables/jaccard.csv,0,0,0,0,0,2,5,4,10,8,37
+experiments/experiment1/top-n-one/tables/lcs.csv,0,0,0,0,13,15,1,0,0,1,36
+experiments/experiment1/top-n-one/tables/levenshtein.csv,0,0,2,20,7,0,0,0,1,0,36
+experiments/experiment1/top-n-one/tables/simpson.csv,0,0,0,0,0,0,0,0,0,0,66
+experiments/experiment1/top-n-one/tables/weighted-jaccard.csv,0,0,0,1,6,11,11,0,1,0,36
