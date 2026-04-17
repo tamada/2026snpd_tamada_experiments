@@ -6,29 +6,29 @@ The topic of manuscript is the birthmark evaluation for the cross-platform binar
 
 ## Directory layout
 
-- birthmakrs: the birthmark data of target programs.
-  - experiment1: credibility evaluation.
-  - experiment2: robustness evaluation.
-- bzip2: submodule for bzip2, which is used as a target program for the robustness evaluation.
-  - bzip2: [`git://sourceware.org/git/bzip2.git`](https://sourceware.org/bzip2/),
-  - bzip2go: [`https://github.com/pedroalbanese/bzip2.git`](https://github.com/pedroalbanese/bzip2.git), and
-  - bzip2rs: [`https://github.com/tamada/bzip2rs.git`](https://github.com/tamada/bzip2rs.git).
-- src: the source code of target programs generated Google Gemini.
-  - factorize
-  - md5
-  - sha256
-- scripts: the utility scripts for the experiment.
+- `birthmarks`: the birthmark data of target programs.
+  - `experiment1`: credibility evaluation.
+  - `experiment2`: robustness evaluation.
+- `bzip2`: submodule for bzip2, which is used as a target program for the robustness evaluation.
+  - `bzip2`: [`git://sourceware.org/git/bzip2.git`](https://sourceware.org/bzip2/),
+  - `bzip2go`: [`https://github.com/pedroalbanese/bzip2.git`](https://github.com/pedroalbanese/bzip2.git), and
+  - `bzip2rs`: [`https://github.com/tamada/bzip2rs.git`](https://github.com/tamada/bzip2rs.git).
+- `src`: the source code of target programs generated Google Gemini.
+  - `factorize`
+  - `md5`
+  - `sha256`
+- `scripts`: the utility scripts for the experiment.
 
 ## Related repositories
 
-- Manuscript repository: [tamada/2026snpd_tamada](https://github.com/tamada/2026snpd_tamada),
-- Experimental data and their results: [tamada/2026snpd_tamada_experiments](https://github.com/tamada/2026snpd_tamada_experiments) (This repository),
-- Birthmarking toolkit for cross-architecture: [oinkie](https://github.com/tamada/oinkie), and
-- Heatmap generator: [heatman](https://github.com/tamada/heatman).
-- bzip2
-  - [bzip2](https://sourceware.org/bzip2/)
-  - [pedroalbanese/bzip2](https://github.com/pedroalbanese/bzip2), written in Go.
-  - [tamada/bzip2rs](https://github.com/tamada/bzip2rs), written in Rust (with a pure Rust crate and a libbzip2 wrapper crate)
+- [`tamada/2026snpd_tamada`](https://github.com/tamada/2026snpd_tamada): Manuscript repository,
+- [`tamada/2026snpd_tamada_experiments`](https://github.com/tamada/2026snpd_tamada_experiments): Experimental data and their results (This repository),
+- [`oinkie`](https://github.com/tamada/oinkie): Birthmarking toolkit for cross-architecture, and
+- [`heatman`](https://github.com/tamada/heatman): Heatmap generator, and
+- bzip2:
+  - [`bzip2` in C](https://sourceware.org/bzip2/),
+  - [`pedroalbanese/bzip2`](https://github.com/pedroalbanese/bzip2), written in Go, and
+  - [`tamada/bzip2rs`](https://github.com/tamada/bzip2rs), written in Rust (with a pure Rust crate and a libbzip2 wrapper crate).
 
 ## Target programs and compiler options
 

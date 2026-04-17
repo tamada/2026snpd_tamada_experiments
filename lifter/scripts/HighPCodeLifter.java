@@ -1,4 +1,3 @@
-package scripts;
 import ghidra.app.script.GhidraScript;
 import ghidra.app.decompiler.*;
 import ghidra.program.model.address.Address;

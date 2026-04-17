@@ -21,6 +21,7 @@ fi
 
 # 一時プロジェクトディレクトリ作成
 mkdir -p "$PROJ_DIR"
+mkdir -p $(dirname $DEST_DIR)
 
 # 実行
 # -import: バイナリを取り込む
@@ -33,7 +34,6 @@ time $GHIDRA_HEADLESS "$PROJ_DIR" "$PROJ_NAME" \
     # -deleteProject \
 
 echo "Generated PCode for ${PROJ_NAME}.json"
-mkdir -p $(dirname $DEST_DIR)
 mv ${PROJ_NAME}.json $(dirname $DEST_DIR)/${PROJ_NAME}.json
 
 # ディレクトリ削除
