@@ -1,0 +1,9 @@
+,"[0.00, 0.10)","[0.10, 0.20)","[0.20, 0.30)","[0.30, 0.40)","[0.40, 0.50)","[0.50, 0.60)","[0.60, 0.70)","[0.70, 0.80)","[0.80, 0.90)","[0.90, 1.00)","[1.00, 1.00]"
+experiments/experiment2/hungarian/tables/cosine.csv,215,100,32,11,39,45,65,27,34,26,1
+experiments/experiment2/hungarian/tables/dice.csv,220,98,31,13,36,42,71,21,37,25,1
+experiments/experiment2/hungarian/tables/euclidean.csv,234,100,22,39,43,76,33,18,18,11,1
+experiments/experiment2/hungarian/tables/jaccard.csv,229,99,26,32,32,85,26,22,30,13,1
+experiments/experiment2/hungarian/tables/lcs.csv,283,68,42,69,49,26,22,24,5,6,1
+experiments/experiment2/hungarian/tables/levenshtein.csv,316,58,90,43,33,18,22,3,5,6,1
+experiments/experiment2/hungarian/tables/simpson.csv,209,93,43,8,20,28,33,75,23,59,4
+experiments/experiment2/hungarian/tables/weighted-jaccard.csv,267,81,44,49,75,26,16,13,14,9,1
