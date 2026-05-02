@@ -100,26 +100,26 @@ func algorithmToIndex(algorithm string) (int, error) {
 	}
 }
 
-func findOther(target *Target, comparison *Comparison) *Target {
-	if comparison.TA.IsSame(target) {
-		return comparison.TB
-	} else if comparison.TB.IsSame(target) {
-		return comparison.TA
+func (c *Comparison) opposite(target *Target) *Target {
+	if c.TA.IsSame(target) {
+		return c.TB
+	} else if c.TB.IsSame(target) {
+		return c.TA
 	}
 	return nil
 }
 
 func printLine(target *Target, comparison *Comparison, vsComparison *Comparison, index int, out io.Writer) {
-	other := findOther(target, vsComparison)
+	other := comparison.opposite(target)
 	x := comparison.Similarities[index]
 	y := vsComparison.Similarities[index]
 	switch other.Language {
 	case "c":
-		fmt.Fprintf(out, "%f,%f,,,%s\n", x, y, target.String())
+		fmt.Fprintf(out, "%f,%f,,,%s,%s,%s\n", x, y, target.String(), comparison.opposite(target).String(), vsComparison.opposite(target).String())
 	case "go":
-		fmt.Fprintf(out, "%f,,%f,,%s\n", x, y, target.String())
+		fmt.Fprintf(out, "%f,,%f,,%s,%s,%s\n", x, y, target.String(), comparison.opposite(target).String(), vsComparison.opposite(target).String())
 	case "rust":
-		fmt.Fprintf(out, "%f,,,%f,%s\n", x, y, target.String())
+		fmt.Fprintf(out, "%f,,,%f,%s,%s,%s\n", x, y, target.String(), comparison.opposite(target).String(), vsComparison.opposite(target).String())
 	}
 }
 
@@ -144,6 +144,7 @@ func processData(data []*Comparison, algorithm string, out io.Writer) error {
 	if err != nil {
 		return err
 	}
+	fmt.Fprintln(out, "X,C,Go,Rust,A,X_B,VS_B")
 	for _, comparison := range data {
 		if comparison.IsXItem() {
 			vsTaComparison := findOnlyDifferentCompilerItem(data, comparison.TA)
@@ -175,7 +176,7 @@ const (
 )
 
 func helpMessage() string {
-	return `Uasge: scatter_csv_builder [OPTIONS] <FILE>
+	return `Usage: scatter_csv_builder [OPTIONS] <FILE>
 OPTIONS:
   -d, --dest <FILE>         Destination for output (default "-")
   -a, --algorithm <ALGO>    Algorithm to use (default: cosine)
