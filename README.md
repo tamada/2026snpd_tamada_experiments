@@ -1,27 +1,24 @@
 # 2026snpd_tamada
 
 This project contains the experimental data and their results of the manuscript for [SNPD 2026](https://acisinternational.org/conferences/snpd-2026-i/).
-The paper repository is [tamada/2026snpd_tamada](https://github.com/tamada/2026snpd_tamada).
 The topic of manuscript is the birthmark evaluation for the cross-platform binary similarity analysis.
 
 ## Directory layout
 
 - `birthmarks`: the birthmark data of target programs.
-  - `experiment1`: credibility evaluation.
-  - `experiment2`: robustness evaluation.
 - `bzip2`: submodule for bzip2, which is used as a target program for the robustness evaluation.
   - `bzip2`: [`git://sourceware.org/git/bzip2.git`](https://sourceware.org/bzip2/),
   - `bzip2go`: [`https://github.com/pedroalbanese/bzip2.git`](https://github.com/pedroalbanese/bzip2.git), and
   - `bzip2rs`: [`https://github.com/tamada/bzip2rs.git`](https://github.com/tamada/bzip2rs.git).
-- `src`: the source code of target programs generated Google Gemini.
-  - `factorize`
-  - `md5`
-  - `sha256`
-- `scripts`: the utility scripts for the experiment.
+- `experiments`: each directory contain the target software, their birthmarks, the comparison results, and the analyses results.
+  - [`experiment1`](experiments/experiment1): resemblance evaluation,
+  - [`experiment2`](experiments/experiment2): credibility evaluation, and
+  - [`experiment3`](experiments/experiment3): robustness evaluation.
+- `analyses`: the utility scripts for the experiment.
 
 ## Related repositories
 
-- [`tamada/2026snpd_tamada`](https://github.com/tamada/2026snpd_tamada): Manuscript repository,
+- [`tamada/2026snpd_tamada`](https://github.com/tamada/2026snpd_tamada): Manuscript repository (private repository),
 - [`tamada/2026snpd_tamada_experiments`](https://github.com/tamada/2026snpd_tamada_experiments): Experimental data and their results (This repository),
 - [`oinkie`](https://github.com/tamada/oinkie): Birthmarking toolkit for cross-architecture, and
 - [`heatman`](https://github.com/tamada/heatman): Heatmap generator, and
@@ -29,6 +26,10 @@ The topic of manuscript is the birthmark evaluation for the cross-platform binar
   - [`bzip2` in C](https://sourceware.org/bzip2/),
   - [`pedroalbanese/bzip2`](https://github.com/pedroalbanese/bzip2), written in Go, and
   - [`tamada/bzip2rs`](https://github.com/tamada/bzip2rs), written in Rust (with a pure Rust crate and a libbzip2 wrapper crate).
+
+----
+
+The following contents are legacy contents for the previous version of the manuscript, which is not submitted to SNPD 2026.
 
 ## Target programs and compiler options
 
