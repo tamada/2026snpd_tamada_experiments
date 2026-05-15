@@ -1,0 +1,15 @@
+,bzip2_gcc_b1c2c8b8.json,bzip2_go_19140ab0.json,bzip2_rs_pd_734ca4e0.json,factorize_gcc_19f3120b.json,factorize_go_ac545792.json,factorize_rs_7986d4cd.json,md5gcc_6477443e.json,md5go_f07553a4.json,md5rs_6c0401ce.json,sha256gcc_9de4683a.json,sha256go_784cc26b.json,sha256rs_0cd988fe.json
+bzip2_gcc_b1c2c8b8.json,1.00,1.00,1.00,0.66,1.00,1.00,0.80,1.00,1.00,0.85,1.00,1.00
+bzip2_go_19140ab0.json,,1.00,1.00,0.71,1.00,1.00,0.81,1.00,1.00,0.87,1.00,1.00
+bzip2_rs_pd_734ca4e0.json,,,1.00,0.75,1.00,1.00,0.77,1.00,1.00,0.87,1.00,1.00
+factorize_gcc_19f3120b.json,,,,1.00,0.71,0.75,0.57,0.71,0.75,0.56,0.71,0.75
+factorize_go_ac545792.json,,,,,1.00,1.00,0.81,1.00,1.00,0.87,1.00,1.00
+factorize_rs_7986d4cd.json,,,,,,1.00,0.76,1.00,1.00,0.83,1.00,1.00
+md5gcc_6477443e.json,,,,,,,1.00,0.81,0.76,0.86,0.81,0.76
+md5go_f07553a4.json,,,,,,,,1.00,1.00,0.87,1.00,1.00
+md5rs_6c0401ce.json,,,,,,,,,1.00,0.83,1.00,1.00
+sha256gcc_9de4683a.json,,,,,,,,,,1.00,0.87,0.83
+sha256go_784cc26b.json,,,,,,,,,,,1.00,1.00
+sha256rs_0cd988fe.json,,,,,,,,,,,,1.00
+
+total duration,"54m 41.71s (3,281,706,005,123 nsec)"
