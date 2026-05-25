@@ -1,0 +1,55 @@
+name: tmate
+on:
+  push:
+    branches:
+      - "**"
+
+permissions:
+  contents: write
+
+jobs:
+  tmate:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+          submodules: recursive
+      - name: Setup Zig
+        uses: mlugg/setup-zig@v2
+
+      - name: Setup Rust
+        run: |
+          mkdir -p dist
+          rustup update stable
+          rustup target add aarch64-pc-windows-msvc
+          rustup target add x86_64-pc-windows-msvc
+          cargo install cargo-zigbuild
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.24'
+
+      - name: Setup TinyGo
+        uses: acifani/setup-tinygo@v2
+        with:
+          tinygo-version: '0.40.0'
+
+      - name: Set up MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64_arm64
+        #   arch: amd64
+
+#       - name: Setup tmate session
+#         uses: mxschmitt/action-tmate@v3
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: executables-amd64-windows
+          path: dist
+
