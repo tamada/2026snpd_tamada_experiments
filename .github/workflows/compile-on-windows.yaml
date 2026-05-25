@@ -40,26 +40,13 @@ jobs:
         with:
           tinygo-version: '0.40.0'
 
-      - name: Build bzip2c
-        shell: bash
-        run: |
-          cd bzip2/bzip2
-          gcc --version
-          make
-          cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_gcc${{ matrix.extension }}
-
-          clang --version
-          make clean
-          make CC=clang
-          cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_clang${{ matrix.extension }}
-
       - name: Setup MSVC
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64
 
-      - name: Build bzip2c for Windows
+      - name: Build bzip2c with msvc for Windows
         shell: bash
         run: |
           cd bzip2/bzip2
@@ -71,6 +58,22 @@ jobs:
         run: |
           cd bzip2/bzip2go
           go build -o ../../dist/bzip2_${{ matrix.arch }}_windows_go${{ matrix.extension }} cmd/bzip2/main.go
+
+      - name: Build bzip2c with gcc
+        shell: bash
+        run: |
+          cd bzip2/bzip2
+          gcc --version
+          make
+          cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_gcc${{ matrix.extension }}
+
+      - name: Build bzip2c with clang
+        shell: bash
+        run: |
+          clang --version
+          make clean
+          make CC=clang
+          cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_clang${{ matrix.extension }}
 
       # - name: Build with TinyGo for not Windows
       #   shell: bash
