@@ -60,7 +60,7 @@ jobs:
           tinygo-version: '0.40.0'
 
       - name: Build bzip2c on Linux
-        if: runner.os != 'Darwin'
+        if: runner.os != 'macOS'
         shell: bash
         run: |
           echo ${{ runner.os }} ${{ matrix.arch }}
@@ -75,7 +75,7 @@ jobs:
           cp bzip2${{ matrix.extension }} ../../dist/bzip2-clang-${{ matrix.target }}${{ matrix.extension }}
 
       - name: Build bzip2c on macOS
-        if: runner.os == 'Darwin'
+        if: runner.os == 'macOS'
         shell: bash
         run: |
           echo ${{ runner.os }} ${{ matrix.arch }}
