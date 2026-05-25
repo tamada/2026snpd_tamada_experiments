@@ -23,11 +23,11 @@ jobs:
             extension: ''
             arch: amd64
             target: x86_64-unknown-linux-gnu
-          - os: macos-latest
+          - os: macos-26
             extension: ''
             arch: arm64
             target: aarch64-apple-darwin
-          - os: macos-latest
+          - os: macos-26-intel
             extension: ''
             arch: amd64
             target: x86_64-apple-darwin
@@ -59,13 +59,28 @@ jobs:
         with:
           tinygo-version: '0.40.0'
 
-      - name: Build bzip2c
+      - name: Build bzip2c on Linux
+        if: runner.os != 'Darwin'
         shell: bash
         run: |
           gcc --version
           clang --version
           cd bzip2/bzip2
           make
+          cp bzip2${{ matrix.extension }} ../../dist/bzip2-gcc-${{ matrix.target }}${{ matrix.extension }}
+
+          make clean
+          make CC=clang
+          cp bzip2${{ matrix.extension }} ../../dist/bzip2-clang-${{ matrix.target }}${{ matrix.extension }}
+
+      - name: Build bzip2c on macOS
+        if: runner.os == 'Darwin'
+        shell: bash
+        run: |
+          gcc-14 --version
+          clang --version
+          cd bzip2/bzip2
+          make CC=gcc-14
           cp bzip2${{ matrix.extension }} ../../dist/bzip2-gcc-${{ matrix.target }}${{ matrix.extension }}
 
           make clean
