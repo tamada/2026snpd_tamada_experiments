@@ -63,6 +63,7 @@ jobs:
         if: runner.os != 'Darwin'
         shell: bash
         run: |
+          echo ${{ runner.os }} ${{ matrix.arch }}
           gcc --version
           clang --version
           cd bzip2/bzip2
@@ -77,6 +78,7 @@ jobs:
         if: runner.os == 'Darwin'
         shell: bash
         run: |
+          echo ${{ runner.os }} ${{ matrix.arch }}
           gcc-14 --version
           clang --version
           cd bzip2/bzip2
