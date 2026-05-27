@@ -36,10 +36,10 @@ jobs:
         with:
           go-version: '1.24'
 
-      - name: Setup TinyGo
-        uses: acifani/setup-tinygo@v2
-        with:
-          tinygo-version: '0.40.0'
+      # - name: Setup TinyGo
+      #   uses: acifani/setup-tinygo@v2
+      #   with:
+      #     tinygo-version: '0.40.0'
 
       - name: Setup MSVC
         if: runner.os == 'Windows'
@@ -54,11 +54,11 @@ jobs:
           nmake -f makefile.msc
           cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_msvc${{ matrix.extension }}
 
-      - name: Build Go
-        shell: bash
-        run: |
-          cd bzip2/bzip2go
-          go build -o ../../dist/bzip2_${{ matrix.arch }}_windows_go${{ matrix.extension }} cmd/bzip2/main.go
+      # - name: Build Go
+      #   shell: bash
+      #   run: |
+      #     cd bzip2/bzip2go
+      #     go build -o ../../dist/bzip2_${{ matrix.arch }}_windows_go${{ matrix.extension }} cmd/bzip2/main.go
 
       - name: Build bzip2c with gcc
         shell: bash

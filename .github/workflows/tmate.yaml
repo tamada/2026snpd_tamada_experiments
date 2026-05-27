@@ -21,6 +21,14 @@ jobs:
       - name: Setup Zig
         uses: mlugg/setup-zig@v2
 
+      # 👇 tmate の前に MSYS2 をインストールするステップを追加
+      - name: Setup MSYS2 (Required for tmate on Windows ARM64)
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          # 必要に応じて、あらかじめインストールしたいパッケージを指定できます
+          # install: msys2-runtime
+
       - name: Setup Rust
         run: |
           mkdir -p dist
