@@ -68,13 +68,13 @@ jobs:
           make
           cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_gcc${{ matrix.extension }}
 
-      - name: Build bzip2c with clang
-        shell: bash
-        run: |
-          clang --version
-          make clean
-          make CC=clang
-          cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_clang${{ matrix.extension }}
+      # - name: Build bzip2c with clang
+      #   shell: bash
+      #   run: |
+      #     clang --version
+      #     make clean
+      #     make CC=clang
+      #     cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_clang${{ matrix.extension }}
 
       # - name: Build with TinyGo for not Windows
       #   shell: bash
