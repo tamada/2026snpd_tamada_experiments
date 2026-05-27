@@ -9,8 +9,8 @@ permissions:
 
 jobs:
   tmate:
-    runs-on: windows-11-arm
-    # runs-on: windows-latest
+    # runs-on: windows-11-arm
+    runs-on: windows-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
