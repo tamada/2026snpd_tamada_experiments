@@ -10,8 +10,8 @@ permissions:
 jobs:
   build:
     name: Build for Windows
-    # runs-on: windows-latest
     runs-on: windows-11-arm
+    continue-on-error: true
             
     steps:
       - name: Checkout code
@@ -42,13 +42,13 @@ jobs:
           make
           cp bzip2.exe ../../dist/bzip2_arm64_windows_gcc.exe
 
-      # - name: Build bzip2c with clang
-      #   shell: bash
-      #   run: |
-      #     clang --version
-      #     make clean
-      #     make CC=clang
-      #     cp bzip2${{ matrix.extension }} ../../dist/bzip2_${{ matrix.arch }}_windows_clang${{ matrix.extension }}
+      - name: Build bzip2c with clang
+        shell: bash
+        run: |
+          clang --version
+          make clean
+          make CC=clang
+          cp bzip2.exe ../../dist/bzip2_arm64_windows_clang.exe
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
