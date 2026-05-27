@@ -10,7 +10,8 @@ permissions:
 jobs:
   build:
     name: Build for Windows
-    runs-on: windows-latest
+    # runs-on: windows-latest
+    runs-on: windows-11-arm
             
     steps:
       - name: Checkout code

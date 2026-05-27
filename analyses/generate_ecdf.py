@@ -1,7 +1,9 @@
+import argparse
 import pandas as pd
 import numpy as np
 import glob
 import os
+import sys
 
 def extract_similarities(csv_path):
     # Read CSV, first column as index
@@ -37,27 +39,44 @@ def extract_similarities(csv_path):
     return np.array(vals)
 
 def main():
-    # Input directory
-    input_dir = 'data/experiment1/hungarian'
-    output_file = 'data/experiment1/ecdf_hungarian.csv'
+    parser = argparse.ArgumentParser(
+        description='Generate ECDF data from CSV files in a directory.'
+    )
+    parser.add_argument(
+        'input_dir',
+        nargs='?',
+        help='Directory containing input CSV files (table format).'
+    )
+    parser.add_argument(
+        '-o', '--output-file',
+        help='Output CSV file. If omitted, write to standard output.'
+    )
+    args = parser.parse_args()
+
+    if not args.input_dir:
+        parser.print_help()
+        return
+
+    input_dir = args.input_dir
+    output_file = args.output_file
     
     files = sorted(glob.glob(os.path.join(input_dir, '*.csv')))
     if not files:
-        print(f"No CSV files found in {input_dir}")
+        print(f"No CSV files found in {input_dir}", file=sys.stderr)
         return
 
     data = {}
     for f in files:
         metric_name = os.path.basename(f).replace('.csv', '')
-        print(f"Processing {metric_name}...")
+        print(f"Processing {metric_name}...", file=sys.stderr)
         vals = extract_similarities(f)
         if vals.size > 0:
             data[metric_name] = vals
         else:
-            print(f"Warning: No valid data found in {f}")
+            print(f"Warning: No valid data found in {f}", file=sys.stderr)
 
     if not data:
-        print("No data collected.")
+        print("No data collected.", file=sys.stderr)
         return
 
     # Generate ECDF table
@@ -75,9 +94,12 @@ def main():
     
     df_ecdf = pd.DataFrame(ecdf_results)
     
-    # Save to CSV
-    df_ecdf.to_csv(output_file, index=False)
-    print(f"Successfully generated ECDF CSV: {output_file}")
+    # Save to CSV or standard output
+    if output_file:
+        df_ecdf.to_csv(output_file, index=False)
+        print(f"Successfully generated ECDF CSV: {output_file}", file=sys.stderr)
+    else:
+        df_ecdf.to_csv(sys.stdout, index=False)
 
 if __name__ == "__main__":
     main()
