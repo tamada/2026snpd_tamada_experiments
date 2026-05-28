@@ -70,8 +70,12 @@ jobs:
           cd bzip2/bzip2
           clang --version
           make clean
-          make CC=clang
+          # same as clang for amd64.
+          clang -O2 -g -D_FILE_OFFSET_BITS=64 -o bzip2.exe bzip2.c blocksort.c huffman.c crctable.c randtable.c compress.c decompress.c bzlib.c
           cp bzip2.exe ../../dist/bzip2_arm64_windows_clang.exe
+
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

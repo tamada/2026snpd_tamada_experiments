@@ -53,7 +53,8 @@ jobs:
           cd bzip2/bzip2
           clang --version
           make clean
-          clang -Wall -Winline -O2 -g -D_FILE_OFFSET_BITS=64  -o bzip2.exe *.c
+          # compile all at once without Makefile (because Makefile assumes in use of gcc)
+          clang -O2 -g -D_FILE_OFFSET_BITS=64 -o bzip2.exe bzip2.c blocksort.c huffman.c crctable.c randtable.c compress.c decompress.c bzlib.c
           cp bzip2.exe ../../dist/bzip2_amd64_windows_clang.exe
 
       - name: Setup tmate session
