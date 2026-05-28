@@ -51,6 +51,7 @@ jobs:
         shell: bash
         continue-on-error: true
         run: |
+          cd bzip2/bzip2
           clang --version
           make clean
           make CC=clang
