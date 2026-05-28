@@ -41,7 +41,7 @@ jobs:
           make clean
           # no testing because cmp command is not available in MSYS2 environment
           make CC=aarch64-w64-mingw32-gcc AR=aarch64-w64-mingw32-ar bzip2
-          cp bzip2.exe ../../dist/bzip2_arm64_windows_gcc.exe
+          cp bzip2 ../../dist/bzip2_arm64_windows_gcc.exe
 
       # - name: Setup tmate session
       #   uses: mxschmitt/action-tmate@v3
