@@ -25,20 +25,12 @@ jobs:
         uses: msys2/setup-msys2@v2
         continue-on-error: true
         with:
-          msystem: UCRT64
+          msystem: MSYS
           update: true
           # ARM64 ネイティブ向けのツールチェーンをインストール
           install: >-
             mingw-w64-cross-mingwarm64-gcc
             make
-
-      - name: Build bzip2c with msvc for Windows
-        shell: bash
-        continue-on-error: true
-        run: |
-          cd bzip2/bzip2
-          nmake -f makefile.msc
-          cp bzip2.exe ../../dist/bzip2_arm64_windows_msvc.exe
 
       - name: Build bzip2c with gcc
         shell: msys2 {0}
@@ -78,6 +70,14 @@ jobs:
 
       - name: Create dist directory.
         run: mkdir -p dist
+
+      - name: Build bzip2c with msvc for Windows
+        shell: bash
+        continue-on-error: true
+        run: |
+          cd bzip2/bzip2
+          nmake -f makefile.msc
+          cp bzip2.exe ../../dist/bzip2_arm64_windows_msvc.exe
 
       - name: Build bzip2c with clang
         shell: bash
