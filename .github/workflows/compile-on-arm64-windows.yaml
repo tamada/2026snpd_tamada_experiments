@@ -8,8 +8,8 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    name: Build for Windows
+  build-gcc:
+    name: Build for Windows ARM64 with GCC
     runs-on: windows-11-arm
             
     steps:
@@ -20,11 +20,6 @@ jobs:
           fetch-depth: 0
           submodules: recursive
           
-      - name: Setup MSVC
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: arm64
-
       # 👇 MSYS2 の ARM64 ネイティブ環境（CLANGARM64）をセットアップ
       - name: Setup MSYS2 for Windows ARM64
         uses: msys2/setup-msys2@v2
@@ -36,9 +31,6 @@ jobs:
           install: >-
             mingw-w64-cross-mingwarm64-gcc
             make
-
-      - name: Create dist directory.
-        run: mkdir -p dist
 
       - name: Build bzip2c with msvc for Windows
         shell: bash
@@ -58,27 +50,49 @@ jobs:
           make CC=aarch64-w64-mingw32-gcc
           cp bzip2.exe ../../dist/bzip2_arm64_windows_gcc.exe
 
-      - name: Initialize MSVC Environment for ARM64
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: executables-arm64-windows-gcc-msvc
+          path: dist
+
+  build-clang:
+    name: Build for Windows ARM64 with clang
+    runs-on: windows-11-arm
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: arm64          
+          arch: arm64
+
+      - name: Create dist directory.
+        run: mkdir -p dist
 
       - name: Build bzip2c with clang
         shell: bash
         continue-on-error: true
         run: |
+          mkdir -p dist
           cd bzip2/bzip2
           clang --version
           make clean
           # same as clang for amd64.
-          clang -O2 -g -D_FILE_OFFSET_BITS=64 -o bzip2.exe bzip2.c blocksort.c huffman.c crctable.c randtable.c compress.c decompress.c bzlib.c
+          clang --target=arm64-pc-windows-msvc -O2 -g -D_FILE_OFFSET_BITS=64 -o bzip2.exe bzip2.c blocksort.c huffman.c crctable.c randtable.c compress.c decompress.c bzlib.c
           cp bzip2.exe ../../dist/bzip2_arm64_windows_clang.exe
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: executables-arm64-windows
+          name: executables-arm64-windows-clang
           path: dist
