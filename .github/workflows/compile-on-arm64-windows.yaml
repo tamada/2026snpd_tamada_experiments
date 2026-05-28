@@ -36,6 +36,7 @@ jobs:
         shell: msys2 {0}
         continue-on-error: true
         run: |
+          mkdir -p dist
           cd bzip2/bzip2
           aarch64-w64-mingw32-gcc --version
           make clean
