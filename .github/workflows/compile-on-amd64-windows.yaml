@@ -25,6 +25,9 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64
+      
+      - name: Create dist directory.
+        run: mkdir -p dist
 
       - name: Build bzip2c with msvc for Windows
         shell: bash
@@ -40,6 +43,7 @@ jobs:
         run: |
           cd bzip2/bzip2
           gcc --version
+          make clean
           make
           cp bzip2.exe ../../dist/bzip2_amd64_windows_gcc.exe
 
