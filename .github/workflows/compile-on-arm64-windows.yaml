@@ -49,7 +49,7 @@ jobs:
           cp bzip2.exe ../../dist/bzip2_arm64_windows_msvc.exe
 
       - name: Build bzip2c with gcc
-        shell: bash
+        shell: msys2 {0}
         continue-on-error: true
         run: |
           cd bzip2/bzip2
