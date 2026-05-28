@@ -53,10 +53,15 @@ jobs:
         continue-on-error: true
         run: |
           cd bzip2/bzip2
-          gcc --version
+          aarch64-w64-mingw32-gcc --version
           make clean
-          make
+          make CC=aarch64-w64-mingw32-gcc
           cp bzip2.exe ../../dist/bzip2_arm64_windows_gcc.exe
+
+      - name: Initialize MSVC Environment for ARM64
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: arm64          
 
       - name: Build bzip2c with clang
         shell: bash
@@ -65,7 +70,7 @@ jobs:
           cd bzip2/bzip2
           clang --version
           make clean
-          make CC="clang --target=arm64-pc-windows-msvc"
+          make
           cp bzip2.exe ../../dist/bzip2_arm64_windows_clang.exe
 
       - name: Upload artifacts
