@@ -39,7 +39,7 @@ jobs:
           cd bzip2/bzip2
           aarch64-w64-mingw32-gcc --version
           make clean
-          make CC=aarch64-w64-mingw32-gcc
+          make CC=aarch64-w64-mingw32-gcc AR=aarch64-w64-mingw32-ar
           cp bzip2.exe ../../dist/bzip2_arm64_windows_gcc.exe
 
       # - name: Setup tmate session
