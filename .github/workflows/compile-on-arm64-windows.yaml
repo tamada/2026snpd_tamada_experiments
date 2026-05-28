@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build-gcc:
-    name: Build for Windows ARM64 with GCC
+    name: build with gcc
     runs-on: windows-11-arm
             
     steps:
@@ -39,7 +39,8 @@ jobs:
           cd bzip2/bzip2
           aarch64-w64-mingw32-gcc --version
           make clean
-          make CC=aarch64-w64-mingw32-gcc AR=aarch64-w64-mingw32-ar
+          # no testing because cmp command is not available in MSYS2 environment
+          make CC=aarch64-w64-mingw32-gcc AR=aarch64-w64-mingw32-ar bzip2
           cp bzip2.exe ../../dist/bzip2_arm64_windows_gcc.exe
 
       # - name: Setup tmate session
@@ -48,11 +49,11 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: executables-arm64-windows-gcc-msvc
+          name: executables-arm64-windows-gcc
           path: dist
 
   build-clang:
-    name: Build for Windows ARM64 with clang
+    name: Build with clang and MSVC
     runs-on: windows-11-arm
 
     steps:
