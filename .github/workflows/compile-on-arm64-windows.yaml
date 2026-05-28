@@ -30,7 +30,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         continue-on-error: true
         with:
-          msystem: CLANGARM64
+          msystem: UCRT64
           update: true
           # ARM64 ネイティブ向けのツールチェーンをインストール
           install: >-
