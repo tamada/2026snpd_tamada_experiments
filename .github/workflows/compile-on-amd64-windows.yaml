@@ -53,14 +53,14 @@ jobs:
           cd bzip2/bzip2
           clang --version
           make clean
-          make CC=clang
+          clang -Wall -Winline -O2 -g -D_FILE_OFFSET_BITS=64  -o bzip2.exe *.c
           cp bzip2.exe ../../dist/bzip2_amd64_windows_clang.exe
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+      # - name: Setup tmate session
+      #   uses: mxschmitt/action-tmate@v3
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: executables-${{ matrix.target }}
+          name: executables-amd64-windows
           path: dist
