@@ -1,4 +1,4 @@
-name: compile bzip by gcc and msvc on windows arm64
+name: compile bzip (arm64)
 on:
   push:
     branches:
@@ -21,10 +21,21 @@ jobs:
           submodules: recursive
           
       - name: Setup MSVC
-        if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: arm64
+
+      # 👇 MSYS2 の ARM64 ネイティブ環境（CLANGARM64）をセットアップ
+      - name: Setup MSYS2 for Windows ARM64
+        uses: msys2/setup-msys2@v2
+        continue-on-error: true
+        with:
+          msystem: UCRT64
+          update: true
+          # ARM64 ネイティブ向けのツールチェーンをインストール
+          install: >-
+            mingw-w64-cross-mingwarm64-gcc
+            make
 
       - name: Create dist directory.
         run: mkdir -p dist
@@ -54,7 +65,7 @@ jobs:
           cd bzip2/bzip2
           clang --version
           make clean
-          make CC=clang
+          make CC="clang --target=arm64-pc-windows-msvc"
           cp bzip2.exe ../../dist/bzip2_arm64_windows_clang.exe
 
       - name: Upload artifacts

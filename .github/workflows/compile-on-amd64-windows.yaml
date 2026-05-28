@@ -1,4 +1,4 @@
-name: compile bzip by gcc and msvc on windows arm64
+name: compile bzip2 (amd64)
 on:
   push:
     branches:
@@ -21,11 +21,10 @@ jobs:
           submodules: recursive
 
       - name: Setup MSVC
-        if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64
-      
+
       - name: Create dist directory.
         run: mkdir -p dist
 
@@ -44,7 +43,7 @@ jobs:
           cd bzip2/bzip2
           gcc --version
           make clean
-          make
+          make CC=aarch64-w64-mingw32-gcc
           cp bzip2.exe ../../dist/bzip2_amd64_windows_gcc.exe
 
       - name: Build bzip2c with clang
