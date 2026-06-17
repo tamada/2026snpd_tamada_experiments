@@ -1,4 +1,4 @@
-name: corss-compile
+name: compile on macOS
 on:
   push:
     branches:

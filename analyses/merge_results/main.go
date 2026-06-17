@@ -192,13 +192,15 @@ func writeData(w io.Writer, comparisons []*Comparisons) []error {
 	var errs []error
 	out := bufio.NewWriter(w)
 	headers := extractTargetPairs(comparisons[0])
-	fmt.Fprintf(out, "id,ta,tb")
+	fmt.Fprintf(out, "id,left (arch),left (os),left (compiler),right (arch),right (os),right (compiler)")
 	for _, c := range comparisons {
 		fmt.Fprintf(out, ",%s", c.Name)
 	}
 	fmt.Fprintf(out, "\n")
 	for _, pair := range headers {
-		fmt.Fprintf(out, "%s,%s,%s", pair.ID, pair.TA.String(), pair.TB.String())
+		fmt.Fprintf(out, "%s,%s,%s,%s,%s,%s,%s", pair.ID,
+			pair.TA.Architecture, pair.TA.OperatingSystem, pair.TA.Compiler,
+			pair.TB.Architecture, pair.TB.OperatingSystem, pair.TB.Compiler)
 		for _, list := range comparisons {
 			c, err := findOther(list.Items, pair.TA, pair.TB)
 			if err != nil {
@@ -209,7 +211,7 @@ func writeData(w io.Writer, comparisons []*Comparisons) []error {
 		}
 		fmt.Fprintf(out, "\n")
 	}
-	fmt.Fprintf(out, ",,")
+	fmt.Fprintf(out, ",,,,,,")
 	for _, c := range comparisons {
 		fmt.Fprintf(out, ",%d", c.Duration)
 	}

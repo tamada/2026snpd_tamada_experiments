@@ -77,29 +77,6 @@ func (c *Comparison) IsXItem() bool {
 	return c.TA.IsOnlyDifferentOs(c.TB)
 }
 
-func algorithmToIndex(algorithm string) (int, error) {
-	switch strings.ToLower(algorithm) {
-	case "cosine":
-		return COSINE_INDEX, nil
-	case "dice":
-		return DICE_INDEX, nil
-	case "euclidean":
-		return EUCLIDEAN_INDEX, nil
-	case "jaccard":
-		return JACCARD_INDEX, nil
-	case "lcs":
-		return LCS_INDEX, nil
-	case "levenshtein":
-		return LEVENSHTEIN_INDEX, nil
-	case "simpson":
-		return SIMPSON_INDEX, nil
-	case "weighted_jaccard":
-		return WEITHTED_JACCARD_INDEX, nil
-	default:
-		return -1, fmt.Errorf("%s: unknown algorithm", algorithm)
-	}
-}
-
 func (c *Comparison) opposite(target *Target) *Target {
 	if c.TA.IsSame(target) {
 		return c.TB
@@ -139,11 +116,18 @@ func findOnlyDifferentCompilerItem(data []*Comparison, target *Target) []*Compar
 	return result
 }
 
-func processData(data []*Comparison, algorithm string, out io.Writer) error {
-	index, err := algorithmToIndex(algorithm)
-	if err != nil {
-		return err
+func processData(data []*Comparison, header []string, algorithm string, out io.Writer) error {
+	index := -1
+	for i := 7; i < len(header); i++ {
+		if strings.EqualFold(header[i], algorithm) {
+			index = i - 7
+			break
+		}
 	}
+	if index == -1 {
+		return fmt.Errorf("%s: unknown algorithm", algorithm)
+	}
+
 	fmt.Fprintln(out, "X,C,Go,Rust,A,X_B,VS_B")
 	for _, comparison := range data {
 		if comparison.IsXItem() {
@@ -164,24 +148,16 @@ func processData(data []*Comparison, algorithm string, out io.Writer) error {
 	return nil
 }
 
-const (
-	COSINE_INDEX           = 0
-	DICE_INDEX             = 1
-	EUCLIDEAN_INDEX        = 2
-	JACCARD_INDEX          = 3
-	LCS_INDEX              = 4
-	LEVENSHTEIN_INDEX      = 5
-	SIMPSON_INDEX          = 6
-	WEITHTED_JACCARD_INDEX = 7
-)
-
 func helpMessage() string {
 	return `Usage: scatter_csv_builder [OPTIONS] <FILE>
 OPTIONS:
   -d, --dest <FILE>         Destination for output (default "-")
   -a, --algorithm <ALGO>    Algorithm to use (default: cosine)
 FILE
-  Input files to process (merged csv files from merge_results)`
+  Input files to process (merged csv files from merge_results)
+  The input CSV is expected to have the following columns:
+    id, left (arch), left (os), left (compiler), right (arch), right (os), right (compiler), <ALGO1>, <ALGO2>, ...
+  The -a option accepts any algorithm name found in the CSV header (from the 8th column onwards).`
 }
 
 func parseOptions(args []string) (*Options, error) {
@@ -225,10 +201,10 @@ func parseLine(record []string, header []string) (Comparison, error) {
 	return Comparison{ID: id, TA: ta, TB: tb, Similarities: similarities}, nil
 }
 
-func readAll(file string) ([]*Comparison, error) {
+func readAll(file string) ([]*Comparison, []string, error) {
 	f, err := os.Open(file)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	defer f.Close()
 	csvio := csv.NewReader(f)
@@ -236,7 +212,7 @@ func readAll(file string) ([]*Comparison, error) {
 	results := []*Comparison{}
 	header, err := csvio.Read()
 	if err != nil {
-		return nil, fmt.Errorf("error reading header: %v", err)
+		return nil, nil, fmt.Errorf("error reading header: %v", err)
 	}
 	for {
 		record, err := csvio.Read()
@@ -244,16 +220,16 @@ func readAll(file string) ([]*Comparison, error) {
 			break
 		}
 		if err != nil {
-			return nil, fmt.Errorf("error reading record: %v", err)
+			return nil, nil, fmt.Errorf("error reading record: %v", err)
 		}
 		comparison, err := parseLine(record, header)
 		if err != nil {
-			return nil, fmt.Errorf("error parsing line: %v", err)
+			return nil, nil, fmt.Errorf("error parsing line: %v", err)
 		}
 		results = append(results, &comparison)
 	}
 
-	return results, nil
+	return results, header, nil
 }
 
 func perform(options *Options) int {
@@ -263,14 +239,14 @@ func perform(options *Options) int {
 		return 1
 	}
 	defer output.Close()
-	data, err := readAll(options.files[0])
+	data, header, err := readAll(options.files[0])
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error reading file: %v\n", err)
 		return 1
 	}
 	out := bufio.NewWriter(output)
 	defer out.Flush()
-	err = processData(data, options.algorithm, out)
+	err = processData(data, header, options.algorithm, out)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error processing data: %v\n", err)
 		return 1
