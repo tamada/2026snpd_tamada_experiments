@@ -1,5 +1,9 @@
 # Experiment 3: Resilience evaluation
 
+> [!WARNING]
+> This page is not used, because the compilations were not correct.
+> See [`../experiment3-2`](../experiment3-2/)
+
 This experiment evaluates the similarities in the birthmarks produced by the same software compiled for different architectures and platforms.
 We employ \bftt{bzip2} and its go and rust implementations as the target software, which is the same software as in Section~\ref{sect:target_exp2}.
 We compile \bftt{bzip2} for macOS Mach-O, Linux ELF, and Windows PE in \texttt{arm64} and \texttt{x86\_64} architectures.

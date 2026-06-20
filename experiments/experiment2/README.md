@@ -1,5 +1,9 @@
 # Experiment 2: Credibility Evaluation
 
+> [!WARNING]
+> This page is not used, because the compilations were not correct.
+> See [`../experiment2-2`](../experiment2-2/)
+
 This experiment evaluates differences of the birthmarks from the different software.
 For this purpose, we should choose software with the same purpose and different authors.
 Therefore, we first selected [**bzip2**](https://sourceware.org/bzip2) as the target software.
